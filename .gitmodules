@@ -1,0 +1,3 @@
+[submodule "twitch-platform-filter"]
+	path = twitch-platform-filter
+	url = https://github.com/peppercat10/twitch-platform-filter
