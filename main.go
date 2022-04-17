@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -40,7 +41,7 @@ func refreshLiveGames() {
 		return
 	}
 
-	commands := append([]string{"twitch-platform-filter/twitch-filter.py", "silent"}, activeConsoles...)
+	commands := append([]string{"twitch-platform-filter/twitch-filter.py", "silent|"}, activeConsoles...)
 
 	cmd := exec.Command("python", commands...)
 	stdout, err := cmd.Output()
@@ -55,5 +56,9 @@ func main() {
 	s := gocron.NewScheduler(time.UTC)
 	s.Every(1).Hours().Do(refreshLiveGames)
 	s.StartAsync()
-	http.ListenAndServe(":3000", http.FileServer(http.Dir("./twitch-platform-filter/html")))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+	http.ListenAndServe(port, http.FileServer(http.Dir("./twitch-platform-filter/html")))
 }
