@@ -53,12 +53,13 @@ func refreshLiveGames() {
 }
 
 func main() {
+	fmt.Println("Executing.")
 	s := gocron.NewScheduler(time.UTC)
 	s.Every(1).Hours().Do(refreshLiveGames)
 	s.StartAsync()
-	port := os.Getenv("PORT")
+	port := ":" + os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = ":3000"
 	}
 	http.ListenAndServe(port, http.FileServer(http.Dir("./twitch-platform-filter/html")))
 }
